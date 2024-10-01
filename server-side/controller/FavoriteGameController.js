@@ -22,4 +22,14 @@ module.exports = class favGamesController {
             next(error)
         }
     }
+
+    static async deleteFavGame(req, res, next) {
+        try {
+            let { id } = req.params
+            let favGame = await FavoriteGame.destroy({ where: { id } });
+            res.status(200).json({ message: `Game with id ${id} has been deleted` });
+        } catch (error) {
+            next(error)
+        }
+    }
 }
