@@ -1,6 +1,7 @@
 const ProfileController = require("../controller/ProfileController");
 const UserController = require("../controller/UserController");
 const authentication = require("../middlewares/authentication");
+const authorization = require("../middlewares/authorization");
 const errorHandler = require("../middlewares/errorHandler");
 const profile = require("./profileRouter");
 

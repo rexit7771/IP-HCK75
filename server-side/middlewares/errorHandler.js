@@ -24,6 +24,9 @@ function errorHandler(error, req, res, next) {
             status = 401;
             message = "Unauthorized";
             break;
+        case "NotFound":
+            status = 404;
+            message = "Data Not Found";
     }
 
     res.status(status).json({ message });
