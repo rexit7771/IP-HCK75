@@ -78,7 +78,7 @@ module.exports = (sequelize, DataTypes) => {
         references: {
           model: 'Users',
           key: 'id'
-        }
+        },
         validate: {
           notNull: {
             msg: 'UserId is required'
