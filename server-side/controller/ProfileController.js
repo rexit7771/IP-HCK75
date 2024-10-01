@@ -15,6 +15,19 @@ module.exports = class ProfileController {
         }
     }
 
+    static async addProfile(req, res, next) {
+        try {
+            let { id } = req.user;
+            let newUser = await Profile.create({
+                UserId: id,
+                ...req.body
+            });
+            res.status(201).json({ message: `Profile with UserId ${id} created`, data: newUser });
+        } catch (error) {
+            next(error)
+        }
+    }
+
     static async editProfile(req, res, next) {
         try {
             let { id } = req.user;
