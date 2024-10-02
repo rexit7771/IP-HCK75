@@ -1,4 +1,5 @@
 const { default: axios } = require("axios");
+const gemini = require("../helpers/gemini");
 
 module.exports = class GameController {
     static async getAllGames(req, res, next) {
@@ -46,6 +47,25 @@ module.exports = class GameController {
         } catch (error) {
             console.log(error);
             next(error);
+        }
+    }
+    // static async get(params) {
+
+    // }
+
+    static async recommendation(req, res, next) {
+        try {
+            let Base_URL = `https://api.rawg.io/api/games?key=${process.env.API_KEY_RAWG}`
+            let { data } = await axios({
+                url: `${Base_URL}`,
+                method: 'GET',
+            });
+
+            // let data = "Samsung"
+            let result = await gemini(data, "action");
+            res.json(result)
+        } catch (error) {
+            next(error)
         }
     }
 }
