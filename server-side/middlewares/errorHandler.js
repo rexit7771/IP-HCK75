@@ -9,13 +9,18 @@ function errorHandler(error, req, res, next) {
             status = 400;
             message = error.errors[0].message;
             break;
+        case "SequelizeUniqueConstraintError":
+            status = 400;
+            message = "Email has been used";
+            break;
         case "nullEmail/Password":
             status = 400;
-            message = "Email and Password is required";
+            message = "Email and Password are required";
             break;
         case "InvalidLogin":
-            status = 400;
+            status = 401;
             message = "Invalid Email/Password";
+            break;
         case "InvalidToken":
             status = 401;
             message = "Invalid Token";

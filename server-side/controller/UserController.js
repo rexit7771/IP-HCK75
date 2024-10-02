@@ -14,8 +14,8 @@ module.exports = class UserController {
             if (!user) {
                 throw { status: 400, name: "InvalidLogin" }
             }
-
-            if (!compare(password, user.password)) {
+            let validate = compare(password, user.password);
+            if (!validate) {
                 throw { status: 400, name: "InvalidLogin" }
             }
 

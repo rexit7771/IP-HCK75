@@ -5,6 +5,7 @@ const authentication = require("../middlewares/authentication");
 const authorization = require("../middlewares/authorization");
 const errorHandler = require("../middlewares/errorHandler");
 const favGames = require("./favGamesRoutes");
+const games = require("./gamesRouter");
 const profile = require("./profileRouter");
 
 const router = require("express").Router();
@@ -16,6 +17,7 @@ router.use(authentication)
 
 router.use("/profile", profile);
 router.use("/fav-games", favGames);
+router.use("/games", games);
 
 router.use(errorHandler)
 
