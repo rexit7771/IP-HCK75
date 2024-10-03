@@ -7,33 +7,39 @@ import { Link } from "react-router-dom";
 export default function Home() {
   const dispatch = useDispatch();
 
-  const { data, errors, loading } = useSelector((state) => state.game);
+  let { data, errors, loading } = useSelector((state) => state.game);
 
   useEffect(() => {
     dispatch(fetchGames());
   }, []);
 
   return (
-    <div className="grid grid-cols-3 gap-3">
-      {loading
-        ? "Loading....."
-        : data?.results.map((e, idx) => {
+    <>
+      {errors && <h1>{errors}</h1>}
+      {!data.results ? (
+        <h1>Loading...</h1>
+      ) : (
+        <div className="grid grid-cols-3 gap-3">
+          {data.results.map((result, index) => {
             return (
-              <div key={idx}>
-                <Link className="group relative block bg-black">
+              <div key={index}>
+                <Link
+                  to={`/games/${result.id}`}
+                  // to={`/games/1`}
+                  className="group relative block bg-black">
                   <img
                     alt=""
-                    src={e.background_image}
+                    src={result.background_image}
                     className="absolute rounded-md inset-0 h-full w-full object-cover opacity-75 transition-opacity group-hover:opacity-50"
                   />
 
                   <div className="relative p-4 sm:p-6 lg:p-8">
                     <p className="text-sm font-medium uppercase tracking-widest text-red-500">
-                      {e.genres[0].name}
+                      {result.genres[0].name}
                     </p>
 
                     <p className="text-xl font-bold text-white sm:text-2xl">
-                      {e.name}
+                      {result.name}
                     </p>
 
                     <div className="mt-32 sm:mt-48 lg:mt-64">
@@ -44,7 +50,7 @@ export default function Home() {
                           </span>{" "}
                           <br />
                           <span className="font-bold text-lg text-yellow-400">
-                            {e.rating} / {e.rating_top}
+                            {result.rating} / {result.rating_top}
                           </span>
                         </p>
                       </div>
@@ -54,6 +60,8 @@ export default function Home() {
               </div>
             );
           })}
-    </div>
+        </div>
+      )}
+    </>
   );
 }
