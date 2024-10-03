@@ -1,8 +1,6 @@
 TODO
 
-Backend
+**Backend**
 
-1. Buatlah backend:
-    - edit profile/:id
-
-A. Hashing Password (Seeding & models)
+1. Integrasi Gemini AI
+2. 

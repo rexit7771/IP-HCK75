@@ -4,9 +4,8 @@ const gemini = require("../helpers/gemini");
 module.exports = class GameController {
     static async getAllGames(req, res, next) {
         try {
-            let Base_URL = `https://api.rawg.io/api/games?key=${process.env.API_KEY_RAWG}`
+            let Base_URL = `https://api.rawg.io/api/games?key=${process.env.API_KEY_RAWG}&page=1&page_size=12`
 
-            console.log(req.query);
             let { page, page_size, search, developers, publishers, genres, stores, platforms } = req.query;
 
             if (page) {
@@ -17,9 +16,6 @@ module.exports = class GameController {
             }
             if (search) {
                 Base_URL += `&search=${search}`
-            }
-            if (search_precise) {
-                Base_URL += `&search_precise=${search_precise}`
             }
             if (developers) {
                 Base_URL += `&developers=${developers}`
@@ -49,9 +45,19 @@ module.exports = class GameController {
             next(error);
         }
     }
-    // static async get(params) {
 
-    // }
+    static async getGameById(req, res, next) {
+        try {
+            let Base_URL = `https://api.rawg.io/api/games/${req.params.id}?key=${process.env.API_KEY_RAWG}`
+            let { data } = await axios({
+                url: `${Base_URL}`,
+                method: 'GET',
+            });
+            res.status(200).json(data)
+        } catch (error) {
+            next(error)
+        }
+    }
 
     static async recommendation(req, res, next) {
         try {
@@ -60,8 +66,6 @@ module.exports = class GameController {
                 url: `${Base_URL}`,
                 method: 'GET',
             });
-
-            // let data = "Samsung"
             let result = await gemini(data, "action");
             res.json(result)
         } catch (error) {

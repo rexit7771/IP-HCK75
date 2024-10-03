@@ -4,6 +4,6 @@ import gameReducer from "./games";
 
 export default configureStore({
     reducer: {
-        game: gameReducer
+        game: gameReducer,
     },
 });

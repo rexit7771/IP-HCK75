@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -10,18 +10,53 @@ export default function Login() {
 
   const login = async (e) => {
     e.preventDefault();
-    const { data } = await axios({
-      url: `http://localhost:3000/login`,
-      method: "post",
-      data: {
-        email,
-        password,
+    try {
+      const { data } = await axios({
+        url: `http://localhost:3000/login`,
+        method: "post",
+        data: {
+          email,
+          password,
+        },
+      });
+      localStorage.setItem("access_token", data.access_token);
+      toast.success("Welcome back!");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    google.accounts.id.initialize({
+      // fill this with your own client ID
+      client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID,
+      // callback function to handle the response
+      callback: async (response) => {
+        console.log("Encoded JWT ID token: " + response.credential);
+        const { data } = await axios.post(
+          "http://localhost:3000/login-google",
+          {
+            googleToken: response.credential,
+          }
+        );
+
+        localStorage.setItem("access_token", data.access_token);
+        navigate("/");
+        // navigate to the home page or do magic stuff
       },
     });
-    localStorage.setItem("access_token", data.access_token);
-    toast.success("Welcome back!");
-    navigate("/");
-  };
+
+    google.accounts.id.renderButton(
+      // HTML element ID where the button will be rendered
+      // this should be existed in the DOM
+      document.getElementById("buttonDiv"),
+      // customization attributes
+      { theme: "outline", size: "large" }
+    );
+    // to display the One Tap dialog, or comment to remove the dialog
+    google.accounts.id.prompt();
+  }, []);
 
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -114,12 +149,15 @@ export default function Login() {
                 />
               </div>
 
-              <div className="col-span-6 sm:flex sm:items-center sm:gap-4 items-">
+              <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
                 <button
                   type="submit"
                   className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500 dark:hover:bg-blue-700 dark:hover:text-white">
                   Login
                 </button>
+              </div>
+              <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
+                <div id="buttonDiv"></div>
               </div>
             </form>
             <div className="col-span-6 sm:flex sm:items-center sm:gap-4">

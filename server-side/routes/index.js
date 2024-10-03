@@ -10,8 +10,9 @@ const profile = require("./profileRouter");
 
 const router = require("express").Router();
 
-router.use("/login", UserController.login);
-router.use("/register", UserController.register);
+router.post("/login", UserController.login);
+router.post("/register", UserController.register);
+router.post("/login-google", UserController.loginGoogle);
 
 router.use(authentication)
 

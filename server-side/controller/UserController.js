@@ -1,6 +1,7 @@
 const { hashing, compare } = require("../helpers/bcrypt");
 const { signPayload, verifyToken } = require("../helpers/jwt");
 const { User } = require("../models");
+const { OAuth2Client } = require('google-auth-library');
 
 module.exports = class UserController {
     static async login(req, res, next) {
@@ -22,6 +23,42 @@ module.exports = class UserController {
             let payload = { id: user.id };
             let token = signPayload(payload);
             res.status(200).json({ access_token: token });
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    static async loginGoogle(req, res, next) {
+        try {
+            const client = new OAuth2Client();
+            console.log('Login Google');
+
+            // we receive googleToken from the client
+            const { googleToken } = req.body;
+            const ticket = await client.verifyIdToken({
+                idToken: googleToken,
+                // we use our client_id from the Google console
+                audience: process.env.GOOGLE_CLIENT_ID,
+            });
+
+            const payload = ticket.getPayload();
+            const { email } = payload;
+            const [user, created] = await User.findOrCreate({
+                where: { email },
+                defaults: {
+                    email: payload.email,
+                    // We can type any password as a placeholder.
+                    // In future development, you should implement a feature to update the user's password.
+                    password: 'google_id'
+                },
+                // Required to set hooks: false
+                hooks: false
+            });
+
+            const token = signPayload({ id: user.id });
+
+            res.status(created ? 201 : 200).json({ access_token: token });
+
         } catch (error) {
             next(error)
         }

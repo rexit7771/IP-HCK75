@@ -4,6 +4,7 @@ import Login from "./src/pages/login";
 import Register from "./src/pages/register";
 import Home from "./src/pages/home";
 import GameDetail from "./src/pages/gameDetail";
+import Profile from "./src/pages/profile";
 
 export const router = createBrowserRouter([
   {
@@ -28,7 +29,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <GameDetail />,
+        element: <Profile />,
       },
     ],
   },
