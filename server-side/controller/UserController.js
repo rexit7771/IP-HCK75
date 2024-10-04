@@ -31,8 +31,6 @@ module.exports = class UserController {
     static async loginGoogle(req, res, next) {
         try {
             const client = new OAuth2Client();
-            console.log('Login Google');
-
             // we receive googleToken from the client
             const { googleToken } = req.body;
             const ticket = await client.verifyIdToken({
