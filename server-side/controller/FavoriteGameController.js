@@ -1,10 +1,29 @@
 const { FavoriteGame } = require("../models");
+const { default: axios } = require("axios");
+
 module.exports = class favGamesController {
     static async myFavGames(req, res, next) {
         try {
             let { id } = req.user;
             let favGames = await FavoriteGame.findAll({ where: { UserId: id } });
-            res.status(200).json({ data: favGames });
+
+
+            // console.log(favGames[0].id, "Ini favGames");
+            const games = []
+
+            for (let i = 0; i < favGames.length; i++) {
+                const element = favGames[i];
+
+                let Base_URL = `https://api.rawg.io/api/games/${element.GameId}?key=${process.env.API_KEY_RAWG}`
+                let { data } = await axios({
+                    url: `${Base_URL}`,
+                    method: 'GET',
+                });
+                data.FavGameId = element.id
+                games.push(data)
+            }
+
+            res.status(200).json({ data: games });
         } catch (error) {
             next(error)
         }
