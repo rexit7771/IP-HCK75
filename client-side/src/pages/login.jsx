@@ -20,8 +20,8 @@ export default function Login() {
         },
       });
       localStorage.setItem("access_token", data.access_token);
-      toast.success("Welcome back!");
       navigate("/");
+      toast.success("Welcome!");
     } catch (error) {
       console.log(error);
     }

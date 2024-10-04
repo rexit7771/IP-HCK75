@@ -59,14 +59,10 @@ module.exports = class GameController {
         }
     }
 
-    static async recommendation(req, res, next) {
+    static async story(req, res, next) {
         try {
-            let Base_URL = `https://api.rawg.io/api/games?key=${process.env.API_KEY_RAWG}`
-            let { data } = await axios({
-                url: `${Base_URL}`,
-                method: 'GET',
-            });
-            let result = await gemini(data, "action");
+            const { game } = req.body;
+            let result = await gemini(game);
             res.json(result)
         } catch (error) {
             next(error)

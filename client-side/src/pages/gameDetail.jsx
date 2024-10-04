@@ -13,10 +13,22 @@ import { Link, useParams } from "react-router-dom";
 export default function GameDetail() {
   const dispatch = useDispatch();
   let { gameId } = useParams();
+  let [story, setStory] = useState();
 
   const { data, errors, loading } = useSelector((state) => state.game);
 
-  console.log(data);
+  const generateStory = async (game) => {
+    const { data } = await axios({
+      method: "POST",
+      url: "http://localhost:3000/games/story",
+      data: {
+        game: game,
+      },
+    });
+    // console.log(data);
+
+    setStory(data);
+  };
 
   useEffect(() => {
     dispatch(fetchGameById(gameId));
@@ -77,6 +89,13 @@ export default function GameDetail() {
                     Wishlist
                   </Link>
                 </div>
+                <div className="mt-5">
+                  <button
+                    onClick={generateStory}
+                    className="btn bg-sky-500 text-white w-1/4">
+                    Story
+                  </button>
+                </div>
               </dl>
             </div>
             <div className="mt-2">
@@ -97,6 +116,22 @@ export default function GameDetail() {
                   {data[0].publishers.map((publisher) => publisher.name)}
                 </dd>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+      {story && (
+        <div className="container mx-auto mt-20 bg-navy rounded">
+          <div
+            href="#"
+            className="block rounded-lg p-4 shadow-sm shadow-indigo-100 mx-auto grid grid-cols-3 gap-3">
+            <div className="mt-2">
+              <dl>
+                <div>
+                  <dt className="font-bold text-xl text-sky-500">Story</dt>
+                  <dd className="text-xl text-white">{story}</dd>
+                </div>
+              </dl>
             </div>
           </div>
         </div>
